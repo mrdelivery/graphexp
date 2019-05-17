@@ -53,10 +53,10 @@ var graphioGremlin = (function(){
 		}
 
 	function get_graph_info(){
-		var gremlin_query_nodes = "nodes = " + traversal_source + ".V().groupCount().by(label);"
-		var gremlin_query_edges = "edges = " + traversal_source + ".E().groupCount().by(label);"
-		var gremlin_query_nodes_prop = "nodesprop = " + traversal_source + ".V().valueMap().select(keys).groupCount();"
-		var gremlin_query_edges_prop = "edgesprop = " + traversal_source + ".E().valueMap().select(keys).groupCount();"
+		var gremlin_query_nodes = "nodes = " + traversal_source + ".V().limit(10).groupCount().by(label);"
+		var gremlin_query_edges = "edges = " + traversal_source + ".E().limit(10).groupCount().by(label);"
+		var gremlin_query_nodes_prop = "nodesprop = " + traversal_source + ".V().limit(10).valueMap().select(keys).groupCount();"
+		var gremlin_query_edges_prop = "edgesprop = " + traversal_source + ".E().limit(10).valueMap().select(keys).groupCount();"
 
 		var gremlin_query = gremlin_query_nodes+gremlin_query_nodes_prop
 			+gremlin_query_edges+gremlin_query_edges_prop
@@ -190,16 +190,13 @@ var graphioGremlin = (function(){
 	}
 
 	function send_to_server(gremlin_query,query_type,active_node,message, callback){
-
-		let server_address = $('#server_address').val();
-		let server_port = $('#server_port').val();
-		let COMMUNICATION_PROTOCOL = $('#server_protocol').val();
+		let COMMUNICATION_PROTOCOL = 'REST'
 			if (COMMUNICATION_PROTOCOL == 'REST'){
-				let server_url = "http://"+server_address+":"+server_port;
+				let server_url = "http://"+host+":"+port;
 				run_ajax_request(gremlin_query,server_url,query_type,active_node,message,callback);
 			}
 			else if (COMMUNICATION_PROTOCOL == 'websocket'){
-				let server_url = "ws://"+server_address+":"+server_port+"/gremlin"
+				let server_url = "ws://"+host+":"+port+"/gremlin"
 				run_websocket_request(gremlin_query,server_url,query_type,active_node,message,callback);
 			}
 			else {
@@ -347,7 +344,7 @@ var graphioGremlin = (function(){
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	function handle_server_answer(data,query_type,active_node,message){
-		let COMMUNICATION_METHOD = $('#communication_method').val();
+		let COMMUNICATION_METHOD = "GraphSON3"
 		if (query_type == 'editGraph'){
 			//console.log(data)
 			$('#outputArea').html("<p> Data successfully written to the DB.</p>");
