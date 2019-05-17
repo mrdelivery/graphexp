@@ -53,10 +53,10 @@ var graphioGremlin = (function(){
 		}
 
 	function get_graph_info(){
-		var gremlin_query_nodes = "nodes = " + traversal_source + ".V().limit(10).groupCount().by(label);"
-		var gremlin_query_edges = "edges = " + traversal_source + ".E().limit(10).groupCount().by(label);"
-		var gremlin_query_nodes_prop = "nodesprop = " + traversal_source + ".V().limit(10).valueMap().select(keys).groupCount();"
-		var gremlin_query_edges_prop = "edgesprop = " + traversal_source + ".E().limit(10).valueMap().select(keys).groupCount();"
+		var gremlin_query_nodes = "nodes = " + traversal_source + ".V().limit(" + graphDefinedBy + ").groupCount().by(label);"
+		var gremlin_query_edges = "edges = " + traversal_source + ".E().limit(" + graphDefinedBy + ").groupCount().by(label);"
+		var gremlin_query_nodes_prop = "nodesprop = " + traversal_source + ".V().limit(" + graphDefinedBy + ").valueMap().select(keys).groupCount();"
+		var gremlin_query_edges_prop = "edgesprop = " + traversal_source + ".E().limit(" + graphDefinedBy + ").valueMap().select(keys).groupCount();"
 
 		var gremlin_query = gremlin_query_nodes+gremlin_query_nodes_prop
 			+gremlin_query_edges+gremlin_query_edges_prop
@@ -172,6 +172,7 @@ var graphioGremlin = (function(){
 		var gremlin_query_nodes = 'nodes = ' + traversal_source + '.V('+id+').as("node").both('+(edge_filter?'"'+edge_filter+'"':'')+').as("node").select(all,"node").inject(' + traversal_source + '.V('+id+')).unfold()'
 		var gremlin_query_edges = "edges = " + traversal_source + ".V("+id+").bothE("+(edge_filter?"'"+edge_filter+"'":"")+")";
 		var gremlin_query = gremlin_query_nodes+'\n'+gremlin_query_edges+'\n'+'[nodes.toList(),edges.toList()]'
+		
 		// while busy, show we're doing something in the messageArea.
 		$('#messageArea').html('<h3>(loading)</h3>');
 		var message = "<p>Query ID: "+ d.id +"</p>"

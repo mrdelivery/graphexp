@@ -33,8 +33,8 @@
 
 	function get_graph_info(){
 		graphioGremlin.get_graph_info();
-		infobox.show_element("#graphInfo");
-		document.getElementById ("showgraphinfo").checked = true;
+		//infobox.show_element("#graphInfo");
+		//document.getElementById ("showgraphinfo").checked = true;
 	}
 </script>
 <!-- ------------------------------------------------- -->
@@ -112,8 +112,8 @@
 
 				<div class="aside left_bar" style="background-color:transparent;pointer-events:auto;">
 					<div  id="graphInfoBar" style="background-color:transparent;pointer-events:auto;">
-						<button name="graphInfo" onclick="get_graph_info();">Get graph info</button>
-						<input type="checkbox" name="showgraphinfo" id="showgraphinfo" onchange="show_hide_element('#graphInfo')"/>Show/hide graph info
+						<!--<button name="graphInfo" onclick="get_graph_info();">Get graph info</button>
+						<input type="checkbox" name="showgraphinfo" id="showgraphinfo" onchange="show_hide_element('#graphInfo')"/>Show/hide graph info-->
 					</div>
 					<div  id="graphInfo" style="background-color:transparent;pointer-events:none;">	
 					</div>
@@ -146,6 +146,7 @@
 
 			//console.log(graph_viz.graph_events.ev);
 			//graph_viz.graph_events.test();
+			get_graph_info()
 
 
 	function init_property_bar(){
