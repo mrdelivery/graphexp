@@ -3,14 +3,15 @@
 
 // if host is set, will override default localhost server option
 //const host = "some_gremlin_server"
-const host = false;
+const host = "localhost";
+const port = "8182";
 
 // For implementations like Neptune where only single commands are allowed per request
 // set to true
 const SINGLE_COMMANDS_AND_NO_VARS = false;
 
 // Time out for the REST protocol. Increase it if the graphDB is slow.
-const REST_TIMEOUT = 2000 
+const REST_TIMEOUT = 120000 
 // TODO: configuration for the secure server
 
 
@@ -41,4 +42,10 @@ const default_edge_color = "#CCC";
 const edge_label_color = "#111";
 // Choose between curved (true) and straight edges (false). 
 // If set to false, multiple edges between 2 nodes will all be straight and overlap.
-const use_curved_edges = true;
+const use_curved_edges = false;
+
+// Exploration Radius Settings
+
+// The number of vertices and edges randomly grabbed used to define the graph schema. 
+// Higher number means slower graph retreival but more info
+const graphDefinedBy = 10
