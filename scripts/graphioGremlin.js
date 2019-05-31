@@ -85,23 +85,35 @@ var graphioGremlin = (function(){
 				}
 	}
 
-
+	/**
+	 * Gets the limit of all queries. 
+	 * This is to make sure we don't explode out/inwards
+	 */
+	function getLimitedGremlinQuery(){
+		let limit_field = $('#limit_field').val();
+		if (limit_field !== "" && isInt(limit_field) && limit_field > 0) {
+			return ".limit(" + limit_field + ")";
+		} else {
+			return ".limit(" + node_limit_per_request + ")";
+		}
+	}
 
 	function search_query() {
 		// Preprocess query
 		let input_string = $('#search_value').val();
 		let input_field = $('#search_field').val();
 		let label_field = $('#label_field').val();
-		let limit_field = $('#limit_field').val();
 		let search_type = $('#search_type').val();
-		//console.log(input_field)
+		
 		var filtered_string = input_string;//You may add .replace(/\W+/g, ''); to refuse any character not in the alphabet
 		if (filtered_string.length>50) filtered_string = filtered_string.substring(0,50); // limit string length
+		
 		// Translate to Gremlin query
 		let has_str = "";
 		if (label_field !== "") {
 			has_str = ".hasLabel('" + label_field + "')";
 		}
+		
 		if (input_field !== "" && input_string !== "") {
 			has_str += ".has('" + input_field + "',";
 			switch (search_type) {
@@ -116,28 +128,22 @@ var graphioGremlin = (function(){
 					has_str += "textContains('" + filtered_string + "'))";
 					break;
 			}
-		} else if (limit_field === "" || limit_field < 0) {
-				limit_field = node_limit_per_request;
-		}
+		} 
 
-		let gremlin_query_nodes = "nodes = " + traversal_source + ".V()" + has_str;
-		if (limit_field !== "" && isInt(limit_field) && limit_field > 0) {
-			gremlin_query_nodes += ".limit(" + limit_field + ").toList();";
-		} else {
-			gremlin_query_nodes += ".toList();";
-		}
+		let gremlin_query_nodes = "nodes = " + traversal_source + ".V()" + has_str + getLimitedGremlinQuery() + ".toList();";
 		let gremlin_query_edges = "edges = " + traversal_source + ".V(nodes).aggregate('node').outE().as('edge').inV().where(within('node')).select('edge').toList();";
-                let gremlin_query_edges_no_vars = "edges = " + traversal_source + ".V()"+has_str+".aggregate('node').outE().as('edge').inV().where(within('node')).select('edge').toList();";
-                //let gremlin_query_edges_no_vars = "edges = " + traversal_source + ".V()"+has_str+".bothE();";
+    let gremlin_query_edges_no_vars = "edges = " + traversal_source + ".V()"+has_str+".aggregate('node').outE().as('edge').inV().where(within('node')).select('edge').toList();";
 		let gremlin_query = gremlin_query_nodes + gremlin_query_edges + "[nodes,edges]";
 		console.log(gremlin_query);
 
 		// while busy, show we're doing something in the messageArea.
 		$('#messageArea').html('<h3>(loading)</h3>');
+
 		// To display the queries in the message area:
 		//var message_nodes = "<p>Node query: '"+gremlin_query_nodes+"'</p>";
 		//var message_edges = "<p>Edge query: '"+gremlin_query_edges+"'</p>";
 		//var message = message_nodes + message_edges;
+		
 		var message = "";
 		if (SINGLE_COMMANDS_AND_NO_VARS) {
 			var nodeQuery = create_single_command(gremlin_query_nodes);
@@ -160,35 +166,29 @@ var graphioGremlin = (function(){
 			 parseInt(Number(value)) == value &&
 			 !isNaN(parseInt(value, 10));
 	}
+
 	function click_query(d) {
 		var edge_filter = $('#edge_filter').val();
 		// Gremlin query
-		//var gremlin_query = traversal_source + ".V("+d.id+").bothE().bothV().path()"
-		// 'inject' is necessary in case of an isolated node ('both' would lead to an empty answer)
+		// var gremlin_query = traversal_source + ".V("+d.id+").bothE().bothV().path()"
+		//'inject' is necessary in case of an isolated node ('both' would lead to an empty answer)
 		var id = d.id;
 		if(isNaN(id)){ // Add quotes if id is a string (not a number).
 			id = '"'+id+'"';
 		}
-		var gremlin_query_nodes = 'nodes = ' + traversal_source + '.V('+id+').as("node").both('+(edge_filter?'"'+edge_filter+'"':'')+').as("node").select(all,"node").inject(' + traversal_source + '.V('+id+')).unfold()'
-		var gremlin_query_edges = "edges = " + traversal_source + ".V("+id+").bothE("+(edge_filter?"'"+edge_filter+"'":"")+")";
+		
+		var raw_query = traversal_source + ".V(" + id + ").as('v1').bothE().as('e').bothV().as('v2').where(neq('v1'))" + getLimitedGremlinQuery() + ".path()"
+		var gremlin_query_nodes = "nodes = " + raw_query + ".select('v1', 'v2').select(values).unfold()"
+		var gremlin_query_edges = "edges = " + raw_query + ".select('e')"
 		var gremlin_query = gremlin_query_nodes+'\n'+gremlin_query_edges+'\n'+'[nodes.toList(),edges.toList()]'
+		console.log(gremlin_query);
 		
 		// while busy, show we're doing something in the messageArea.
 		$('#messageArea').html('<h3>(loading)</h3>');
+		
 		var message = "<p>Query ID: "+ d.id +"</p>"
-				if(SINGLE_COMMANDS_AND_NO_VARS){
-					var nodeQuery = create_single_command(gremlin_query_nodes);
-					var edgeQuery = create_single_command(gremlin_query_edges);
-					send_to_server(nodeQuery, null, null, null, function(nodeData){
-						send_to_server(edgeQuery, null, null, null, function(edgeData){
-							var combinedData = [nodeData,edgeData];
-							handle_server_answer(combinedData, 'click', d.id, message);
-						});
-					});
-				} else {
-					send_to_server(gremlin_query,'click',d.id,message);
-				}
-	}
+		send_to_server(gremlin_query,'click',d.id,message);
+}
 
 	function send_to_server(gremlin_query,query_type,active_node,message, callback){
 		let COMMUNICATION_PROTOCOL = 'REST'
@@ -357,8 +357,6 @@ var graphioGremlin = (function(){
 			//console.log(data)
 			data = graphson3to1(data);
 			var arrange_data = arrange_datav3;
-		} else if (COMMUNICATION_METHOD == 'GraphSON2'){
-			var arrange_data = arrange_datav2;
 		} else {
 			console.log('Bad communication protocol. Accept "GraphSON2" or "GraphSON3".'
 				+' Using default GraphSON3.')
@@ -424,30 +422,22 @@ var graphioGremlin = (function(){
 	  return null;
 	}  
 
-	/////////////////////////////////////////////////////////////
-	function arrange_datav2(data) {
-		// Extract node and edges from the data returned for 'search' and 'click' request
-		// Create the graph object
-		var nodes=[], links=[];
-		for (var key in data){
-			data[key].forEach(function (item) {
-			if (item.type=="vertex" && idIndex(nodes,item.id) == null) // if vertex and not already in the list
-				nodes.push(extract_infov2(item));
-			if (item.type=="edge" && idIndex(links,item.id) == null)
-				links.push(extract_infov2(item));
-			});
-		}
-	  return {nodes:nodes, links:links};
-	}
-
 	function arrange_datav3(data) {
 		// Extract node and edges from the data returned for 'search' and 'click' request
 		// Create the graph object
 		var nodes=[], links=[];
 		if(data!=null) {
 			for (var key in data){
-				if(data[key]!=null) {
-					data[key].forEach(function (item) {
+
+				var innerElement = data[key]
+				if(innerElement!=null) {
+					//Filtering out labels used in query
+					if(typeof(innerElement.objects) !== 'undefined'){
+						innerElement = innerElement.objects
+					}
+
+					//Adding each element to the visualiser
+					innerElement.forEach(function (item) {
 						if (!("inV" in item) && idIndex(nodes,item.id) == null){ // if vertex and not already in the list
 							item.type = "vertex";
 							nodes.push(extract_infov3(item));
