@@ -323,8 +323,6 @@ var graphioGremlin = (function(){
 		$('#messageArea').html('');
 	}
 
-
-
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	function make_properties_list(data){
 		var prop_dic = {};
@@ -400,7 +398,30 @@ var graphioGremlin = (function(){
 		return data_dic
 	}
 
-	function extract_infov3(data) {
+	/**
+	 * This is used to check if a string is json. We need this to make sure we display certain fields correctly
+	 * 
+	 * @param {String} item The thing we suspect might be json.
+	 */
+	function isJson(item) {
+    item = typeof item !== "string"
+        ? JSON.stringify(item)
+        : item;
+
+    try {
+        item = JSON.parse(item);
+    } catch (e) {
+        return false;
+    }
+
+    if (typeof item === "object" && item !== null) {
+        return true;
+    }
+
+    return false;
+}
+
+function extract_infov3(data) {
 	var data_dic = {id:data.id, label:data.label, type:data.type, properties:{}}
 	var prop_dic = data.properties
 	//console.log(prop_dic)
@@ -411,6 +432,10 @@ var graphioGremlin = (function(){
 				property['summary'] = get_vertex_prop_in_list(prop_dic[key]).toString();
 			} else {
 				var property = prop_dic[key]['value'];
+				//Improve Formatting
+				if(isJson(property)){
+					property = JSON.stringify(JSON.parse(property), undefined, 2)
+				}
 			}
 			//property = property.toString();
 			data_dic.properties[key] = property;

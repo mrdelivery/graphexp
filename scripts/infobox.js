@@ -39,7 +39,7 @@ var infobox = (function(){
 		_table_IDinfo = graphElem_bar.append("table").attr("id","tableIdDetails");
 		init_table(_table_IDinfo,["Key","Value"]);
 		_table_DBinfo = graphElem_bar.append("table").attr("id","tableDBDetails");
-		init_table(_table_DBinfo,["Key","Value","Property"]);
+		init_table(_table_DBinfo,["Key","Value"]);
 		hide_element(label_graph);
 
 	}
@@ -77,8 +77,8 @@ var infobox = (function(){
 	function append_keysvalues(table_body,data,type){
 		for (var key in data){
 			var info_row = table_body.append("tr");
-	 		var key_text = info_row.append("td").text(key).style("font-size",_font_size);
-	 		var value_text = info_row.append("td").text(data[key]).style("font-size",_font_size);
+	 		var key_text = info_row.append("td").append("pre").text(key).style("font-size",_font_size);
+	 		var value_text = info_row.append("td").append("pre").text(data[key]).style("font-size",_font_size);
 	 		if (type=="bold") {
 	 			key_text.style('font-weight','bolder');}
 		}
@@ -129,9 +129,8 @@ var infobox = (function(){
 		else {
 		 	for (var key in d.properties){
 		 		var new_info_row = info_table.append("tr");
-	 			new_info_row.append("td").text(key);
-	 			new_info_row.append("td").text(d.properties[key]);
-	 			new_info_row.append("td").text("")
+	 			new_info_row.append("td").append("pre").text(key);
+	 			new_info_row.append("td").append("pre").text(d.properties[key]);
 			}
 		}
 	}
@@ -145,15 +144,15 @@ var infobox = (function(){
  			if ( ((typeof value[subkey] === "object") && (value[subkey] !== null)) && ('properties' in value[subkey]) ){
  				for (var subsubkey in value[subkey].properties){
  					var new_info_row = info_table.append("tr");
- 					new_info_row.append("td").text(key).style("font-size",_font_size);
- 					new_info_row.append("td").text(value[subkey].value).style("font-size",_font_size);
- 					new_info_row.append("td").text(subsubkey + ' : '+ value[subkey].properties[subsubkey]).style("font-size",_font_size);
+ 					new_info_row.append("td").append("pre").text(key).style("font-size",_font_size);
+ 					new_info_row.append("td").append("pre").text(value[subkey].value).style("font-size",_font_size);
+ 					new_info_row.append("td").append("pre").text(subsubkey + ' : '+ value[subkey].properties[subsubkey]).style("font-size",_font_size);
  				}
  			} else {
  				var new_info_row = info_table.append("tr");
- 				new_info_row.append("td").text(key).style("font-size",_font_size);
- 				new_info_row.append("td").text(value[subkey].value).style("font-size",_font_size);
- 				new_info_row.append("td").text('').style("font-size",_font_size);
+ 				new_info_row.append("td").append("pre").text(key).style("font-size",_font_size);
+ 				new_info_row.append("td").append("pre").text(value[subkey].value).style("font-size",_font_size);
+ 				new_info_row.append("td").append("pre").text('').style("font-size",_font_size);
  			}
 		}
 	}
