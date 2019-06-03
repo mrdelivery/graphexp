@@ -206,12 +206,7 @@ var graphioGremlin = (function(){
 			if (COMMUNICATION_PROTOCOL == 'REST'){
 				let server_url = "http://"+host+":"+port;
 				run_ajax_request(gremlin_query,server_url,query_type,active_node,message,callback);
-			}
-			else if (COMMUNICATION_PROTOCOL == 'websocket'){
-				let server_url = "ws://"+host+":"+port+"/gremlin"
-				run_websocket_request(gremlin_query,server_url,query_type,active_node,message,callback);
-			}
-			else {
+			} else {
 				console.log('Bad communication protocol. Check configuration file. Accept "REST" or "websocket" .')
 			}
 				
@@ -277,81 +272,6 @@ var graphioGremlin = (function(){
 				$('#messageArea').html('');
 			}
 		});
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Websocket connection
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	function run_websocket_request(gremlin_query,server_url,query_type,active_node,message,callback){
-		$('#messageArea').html('<h3>(loading)</h3>');
-
-		var msg = { "requestId": uuidv4(),
-			"op":"eval",
-			"processor":"",
-			"args":{"gremlin": gremlin_query,
-				"bindings":{},
-				"language":"gremlin-groovy"}}
-
-		var data = JSON.stringify(msg);
-
-		var ws = new WebSocket(server_url);
-		ws.onopen = function (event){
-			ws.send(data,{ mask: true});	
-		};
-		ws.onerror = function (err){
-			console.log('Connection error using websocket');
-			console.log(err);
-			if (query_type == 'editGraph'){
-				$('#outputArea').html("<p> Connection error using websocket</p>"
-					+"<p> Problem accessing "+server_url+ " </p>"+
-					"<p> Possible cause: creating a edge with bad node ids "+
-					"(linking nodes not existing in the DB). </p>");
-				$('#messageArea').html('');
-			} else {$('#outputArea').html("<p> Connection error using websocket</p>"
-					+"<p> Cannot connect to "+server_url+ " </p>");
-				$('#messageArea').html('');
-			}
-
-		};
-		ws.onmessage = function (event){
-			var response = JSON.parse(event.data);
-			var code=Number(response.status.code)
-			if(!isInt(code) || code<200 || code>299) {
-				$('#outputArea').html(response.status.message);
-				$('#messageArea').html("Error retrieving data");
-				return 1;
-			}
-			var data = response.result.data;
-			if (data == null){
-				if (query_type == 'editGraph'){
-					$('#outputArea').html(response.status.message);
-					$('#messageArea').html('Could not write data to DB.' +
-						"<p> Possible cause: creating a edge with bad node ids "+
-						"(linking nodes not existing in the DB). </p>");
-					return 1;
-				} else {
-					//$('#outputArea').html(response.status.message);
-					//$('#messageArea').html('Server error. No data.');
-					//return 1;
-				}
-			}
-			//console.log(data)
-			//console.log("Results received")
-			if(callback){
-				callback(data);
-			} else {
-				handle_server_answer(data,query_type,active_node,message);
-			}
-		};		
-	}
-
-	// Generate uuid for websocket requestId. Code found here:
-	// https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-	function uuidv4() {
-	  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-		var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-		return v.toString(16);
-	  });
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
