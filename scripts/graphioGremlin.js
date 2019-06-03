@@ -164,17 +164,31 @@ var graphioGremlin = (function(){
 			 !isNaN(parseInt(value, 10));
 	}
 
+	function getTraversableEdges(){
+		var edgesToTraverse = "";
+		var isLastMileChecked = $('#last-mile')[0].checked;
+		var isLineHaulChecked = $('#line-haul')[0].checked;
+
+		if(isLastMileChecked && isLineHaulChecked){
+			edgesToTraverse = "'LineHaul','LastMile'"
+		} else if(isLastMileChecked){
+			edgesToTraverse = "'LastMile'"
+		} else if(isLineHaulChecked){
+			edgesToTraverse = "'LineHaul'"
+		} else {
+			edgesToTraverse = "'NoEdgesToTravese'" //Hack to make sure no edges returned when both check boxes are unticked
+		}
+		
+		return edgesToTraverse
+	}
+
 	function click_query(d) {
-		var edge_filter = $('#edge_filter').val();
-		// Gremlin query
-		// var gremlin_query = traversal_source + ".V("+d.id+").bothE().bothV().path()"
-		//'inject' is necessary in case of an isolated node ('both' would lead to an empty answer)
 		var id = d.id;
 		if(isNaN(id)){ // Add quotes if id is a string (not a number).
 			id = '"'+id+'"';
 		}
 		
-		var raw_query = traversal_source + ".V(" + id + ").as('v1').bothE().as('e').bothV().as('v2').where(neq('v1'))" + getLimitedGremlinQuery() + ".path()"
+		var raw_query = traversal_source + ".V(" + id + ").as('v1').bothE(" + getTraversableEdges() + ").as('e').bothV().as('v2').where(neq('v1'))" + getLimitedGremlinQuery() + ".path()"
 		var gremlin_query_nodes = "nodes = " + raw_query + ".select('v1', 'v2').select(values).unfold()"
 		var gremlin_query_edges = "edges = " + raw_query + ".select('e')"
 		var gremlin_query = gremlin_query_nodes+'\n'+gremlin_query_edges+'\n'+'[nodes.toList(),edges.toList()]'

@@ -84,16 +84,19 @@
 			<div class="nav container" id="graph_bar">
 				<div class="nav inputs_container_bottom">
 					<div class="nav input_unit_container">
-						<label class="nav input_label" for="edge_filter">Traverse by edge:</label>
-						<input name="edge_filter" id="edge_filter" value="" />
+						<input type="checkbox" name="line-haul" id="line-haul" checked=true/>
+						<label class="nav input_label" for="line-haul">Line Hauls</label>
+						
+						<input type="checkbox" name="last-mile" id="last-mile" checked=true/>
+						<label class="nav input_label" for="last-mile">Last Miles</label>
 					</div>
 					<div class="nav input_unit_container">
-						<label class="nav input_label" for="nbLayers">Nb of layers</label>
+						<label class="nav input_label" for="nbLayers">Layers</label>
 						<input type="number" id="nbLayers" min="1" max="128" onclick="set_nb_layers()">
 					</div>
 					<div class="nav input_unit_container">
 						<input type="checkbox" name="Freeze" id="freeze-in" />
-						<label class="nav input_label" for="freeze-in">Freeze exploration</label>
+						<label class="nav input_label" for="freeze-in">Freeze</label>
 					</div>
 					<div class="nav input_unit_container">
 						<input type="checkbox" name="showName_box" id="showName" onclick="graphShapes.show_names()"/>
