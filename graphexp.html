@@ -27,7 +27,6 @@
 
 	///////////////////////////////////////////////
 	function search_query(){
-		//if (typeof graph_viz.simulation!=='undefined') {graph_viz.simulation.stop(); console.log('Simulation stopped!');}
 		graphioGremlin.search_query();
 	}
 
@@ -84,10 +83,10 @@
 			<div class="nav container" id="graph_bar">
 				<div class="nav inputs_container_bottom">
 					<div class="nav input_unit_container">
-						<input type="checkbox" name="line-haul" id="line-haul" checked=true/>
+						<input type="checkbox" name="line-haul" id="line-haul" checked/>
 						<label class="nav input_label" for="line-haul">Line Hauls</label>
 						
-						<input type="checkbox" name="last-mile" id="last-mile" checked=true/>
+						<input type="checkbox" name="last-mile" id="last-mile" checked/>
 						<label class="nav input_label" for="last-mile">Last Miles</label>
 					</div>
 					<div class="nav input_unit_container">
@@ -95,7 +94,7 @@
 						<input type="number" id="nbLayers" min="1" max="128" onclick="set_nb_layers()">
 					</div>
 					<div class="nav input_unit_container">
-						<input type="checkbox" name="showAllocations" id="show-allocations" checked=false/>
+						<input type="checkbox" name="showAllocations" id="show-allocations"/>
 						<label class="nav input_label" for="showAllocations">Show Allocation Data</label>
 
 						<input type="checkbox" name="showName_box" id="showName" onclick="graphShapes.show_names()"/>
@@ -188,23 +187,20 @@
 	}
 
 	function display_properties_bar(prop_list,item,text){
+		prop_list = prop_list.sort()
 		var nav_bar = d3.select("#graphInfoBar");
 		nav_bar.select("#property_bar_"+item).remove();
 		var property_bar = nav_bar.append("div").attr("id","property_bar_"+item);
 		property_bar.append('text').text(text).style("font-weight","bold");
 		var property_label = property_bar.selectAll('input').append("ul")
 			.data(prop_list).enter().append("li").append("pre");
-			
-
-			
+				
 		property_label.append('input').attr('type','checkbox').attr('id',function (d) { return item+"_"+d; })
 			.attr('id_nb',function (d) { return prop_list.indexOf(d); })
 			//.attr('onchange',function(d){display_prop(d);});
 			.attr('onchange','display_prop(this)');
 
 		property_label.append('label').text(function (d) { return d; });
-		
-
 	}
 
 	function display_color_choice(prop_list,item,text){
