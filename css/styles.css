@@ -64,6 +64,11 @@ th, td
 	border-bottom: 1px solid #ddd;
 }
 
+pre
+{
+	margin: 0em 0em;
+}
+
 a:link { color: royalblue; }
 a:visited { color: purple; }
 a:focus { color: black; }
