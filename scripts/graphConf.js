@@ -17,7 +17,7 @@ const REST_TIMEOUT = 120000
 
 // Graph configuration
 const default_nb_of_layers = 3;
-const node_limit_per_request = 50;
+const node_limit_per_request = 10;
 
 // Simulation
 const force_strength = -600;
@@ -48,4 +48,4 @@ const use_curved_edges = true;
 
 // The number of vertices and edges randomly grabbed used to define the graph schema. 
 // Higher number means slower graph retreival but more info
-const graphDefinedBy = 10
+const graphDefinedBy = 5

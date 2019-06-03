@@ -46,9 +46,6 @@ var graphioGremlin = (function(){
 				}
 			}
 			var returnQuery = query.trim();
-//                        if(returnQuery.endsWith(".toList();")){
-//                            returnQuery = returnQuery+".toList();";
-//                        }
 			return returnQuery;
 		}
 
