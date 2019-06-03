@@ -95,7 +95,7 @@
 						<input type="number" id="nbLayers" min="1" max="128" onclick="set_nb_layers()">
 					</div>
 					<div class="nav input_unit_container">
-						<input type="checkbox" name="showAllocations" id="show-allocations" checked=true/>
+						<input type="checkbox" name="showAllocations" id="show-allocations" checked=false/>
 						<label class="nav input_label" for="showAllocations">Show Allocation Data</label>
 
 						<input type="checkbox" name="showName_box" id="showName" onclick="graphShapes.show_names()"/>
@@ -192,10 +192,9 @@
 		nav_bar.select("#property_bar_"+item).remove();
 		var property_bar = nav_bar.append("div").attr("id","property_bar_"+item);
 		property_bar.append('text').text(text).style("font-weight","bold");
-		//d3.select('#property_bar').append('text').text('hello')
 		var property_label = property_bar.selectAll('input').append("ul")
-			.data(prop_list).enter().append("li");
-			//.append('label');
+			.data(prop_list).enter().append("li").append("pre");
+			
 
 			
 		property_label.append('input').attr('type','checkbox').attr('id',function (d) { return item+"_"+d; })
@@ -304,7 +303,6 @@
 			return "";
 		}
 	}
-
 
 	function set_nb_layers(){
 		var nb_layers = parseInt(document.getElementById('nbLayers').value);

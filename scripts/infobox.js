@@ -117,6 +117,18 @@ var infobox = (function(){
 	  	append_keysvalues(info_table,data_dic)
 	}
 
+	/**
+	 * Helper methods which sorts a dictionary into an array order by it's keys
+	 * 
+	 * @param {Dictionary} dict 
+	 */
+	function getSortedKeys(dict){
+		var sorted = [];
+		for(var key in dict) {
+			sorted[sorted.length] = key;
+		}
+		return sorted.sort();
+	}
 
 	function _display_DBinfo(d){
 		_table_DBinfo.select("tbody").remove();
@@ -127,7 +139,9 @@ var infobox = (function(){
 		 	}
 		}
 		else {
-		 	for (var key in d.properties){
+			var sortedKeys = getSortedKeys(d.properties)
+		 	for (var index in sortedKeys){
+				var key = sortedKeys[index]
 				var render = true;
 
 				if(key == "allocationData" && !$('#show-allocations')[0].checked){

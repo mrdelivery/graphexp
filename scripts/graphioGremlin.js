@@ -285,7 +285,7 @@ var graphioGremlin = (function(){
 		}
 	
 		data = graphson3to1(data);
-		
+
 		if (!(0 in data)) {
 			message = 'No data. Check the communication protocol. (Try changing Gremlin version to 3.3.*).'
 			console.log(message)
