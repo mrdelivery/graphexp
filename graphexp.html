@@ -95,12 +95,15 @@
 						<input type="number" id="nbLayers" min="1" max="128" onclick="set_nb_layers()">
 					</div>
 					<div class="nav input_unit_container">
-						<input type="checkbox" name="Freeze" id="freeze-in" />
-						<label class="nav input_label" for="freeze-in">Freeze</label>
-					</div>
-					<div class="nav input_unit_container">
+						<input type="checkbox" name="showAllocations" id="show-allocations" checked=true/>
+						<label class="nav input_label" for="showAllocations">Show Allocation Data</label>
+
 						<input type="checkbox" name="showName_box" id="showName" onclick="graphShapes.show_names()"/>
 						<label class="nav input_label" for="showName">Show labels</label>
+					</div>
+					<div class="nav input_unit_container">
+						<input type="checkbox" name="Freeze" id="freeze-in" />
+						<label class="nav input_label" for="freeze-in">Freeze</label>
 					</div>
 				</div>
 				<div class="nav controls">
@@ -308,7 +311,6 @@
 		//var nb_layers = parseInt(layer_input.getAttribute("value"));
 		console.log(nb_layers)
 		graph_viz.layers.set_nb_layers(nb_layers);
-
 	}
 
 	function show_hide_element(element_label){

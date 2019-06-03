@@ -283,17 +283,9 @@ var graphioGremlin = (function(){
 			$('#messageArea').html('');
 			return // TODO handle answer to check if data has been written
 		}
-		//console.log(COMMUNICATION_METHOD)
-		if (COMMUNICATION_METHOD == 'GraphSON3'){
-			//console.log(data)
-			data = graphson3to1(data);
-			var arrange_data = arrange_datav3;
-		} else {
-			console.log('Bad communication protocol. Accept "GraphSON2" or "GraphSON3".'
-				+' Using default GraphSON3.')
-			data = graphson3to1(data);
-			var arrange_data = arrange_datav3;
-		}
+	
+		data = graphson3to1(data);
+		
 		if (!(0 in data)) {
 			message = 'No data. Check the communication protocol. (Try changing Gremlin version to 3.3.*).'
 			console.log(message)
@@ -311,7 +303,7 @@ var graphioGremlin = (function(){
 			display_color_choice(_node_properties,'nodes','Node color by:');
 		} else {
 			//console.log(data);
-			var graph = arrange_data(data);
+			var graph = arrange_datav3(data);
 			//console.log(graph)
 			if (query_type=='click') var center_f = 0; //center_f=0 mean no attraction to the center for the nodes 
 			else if (query_type=='search') var center_f = 1;

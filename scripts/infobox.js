@@ -128,9 +128,17 @@ var infobox = (function(){
 		}
 		else {
 		 	for (var key in d.properties){
-		 		var new_info_row = info_table.append("tr");
-	 			new_info_row.append("td").append("pre").text(key);
-	 			new_info_row.append("td").append("pre").text(d.properties[key]);
+				var render = true;
+
+				if(key == "allocationData" && !$('#show-allocations')[0].checked){
+					render = false
+				}
+
+				if(render){
+					var new_info_row = info_table.append("tr");
+					new_info_row.append("td").append("pre").text(key);
+					new_info_row.append("td").append("pre").text(d.properties[key]);
+				}
 			}
 		}
 	}
