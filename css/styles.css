@@ -64,6 +64,11 @@ th, td
 	border-bottom: 1px solid #ddd;
 }
 
+pre
+{
+	margin: 0em 0em;
+}
+
 a:link { color: royalblue; }
 a:visited { color: purple; }
 a:focus { color: black; }
@@ -168,7 +173,7 @@ Layout styles
 	position: absolute;
 	right: 0;
 	margin-right: 1em;
-	max-width: 275px;
+	max-width: 375px;
 }
 
 .footer

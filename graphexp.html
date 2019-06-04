@@ -27,7 +27,6 @@
 
 	///////////////////////////////////////////////
 	function search_query(){
-		//if (typeof graph_viz.simulation!=='undefined') {graph_viz.simulation.stop(); console.log('Simulation stopped!');}
 		graphioGremlin.search_query();
 	}
 
@@ -74,7 +73,7 @@
 					</div>
 					<div class="nav input_unit_container">
 						<label for="limit_field">Results limit:</label>
-						<input name="limit_field" id="limit_field" value="50" min="1" max="1000" type="number"/>
+						<input name="limit_field" id="limit_field" value="10" min="1" max="1000" type="number"/>
 					</div>
 				</div>
 				<div class="nav controls">
@@ -84,20 +83,26 @@
 			<div class="nav container" id="graph_bar">
 				<div class="nav inputs_container_bottom">
 					<div class="nav input_unit_container">
-						<label class="nav input_label" for="edge_filter">Traverse by edge:</label>
-						<input name="edge_filter" id="edge_filter" value="" />
+						<input type="checkbox" name="line-haul" id="line-haul" checked/>
+						<label class="nav input_label" for="line-haul">Line Hauls</label>
+						
+						<input type="checkbox" name="last-mile" id="last-mile" checked/>
+						<label class="nav input_label" for="last-mile">Last Miles</label>
 					</div>
 					<div class="nav input_unit_container">
-						<label class="nav input_label" for="nbLayers">Nb of layers</label>
+						<label class="nav input_label" for="nbLayers">Layers</label>
 						<input type="number" id="nbLayers" min="1" max="128" onclick="set_nb_layers()">
 					</div>
 					<div class="nav input_unit_container">
-						<input type="checkbox" name="Freeze" id="freeze-in" />
-						<label class="nav input_label" for="freeze-in">Freeze exploration</label>
-					</div>
-					<div class="nav input_unit_container">
+						<input type="checkbox" name="showAllocations" id="show-allocations"/>
+						<label class="nav input_label" for="showAllocations">Show Allocation Data</label>
+
 						<input type="checkbox" name="showName_box" id="showName" onclick="graphShapes.show_names()"/>
 						<label class="nav input_label" for="showName">Show labels</label>
+					</div>
+					<div class="nav input_unit_container">
+						<input type="checkbox" name="Freeze" id="freeze-in" />
+						<label class="nav input_label" for="freeze-in">Freeze</label>
 					</div>
 				</div>
 				<div class="nav controls">
@@ -182,24 +187,20 @@
 	}
 
 	function display_properties_bar(prop_list,item,text){
+		prop_list = prop_list.sort()
 		var nav_bar = d3.select("#graphInfoBar");
 		nav_bar.select("#property_bar_"+item).remove();
 		var property_bar = nav_bar.append("div").attr("id","property_bar_"+item);
 		property_bar.append('text').text(text).style("font-weight","bold");
-		//d3.select('#property_bar').append('text').text('hello')
 		var property_label = property_bar.selectAll('input').append("ul")
-			.data(prop_list).enter().append("li");
-			//.append('label');
-
-			
+			.data(prop_list).enter().append("li").append("pre");
+				
 		property_label.append('input').attr('type','checkbox').attr('id',function (d) { return item+"_"+d; })
 			.attr('id_nb',function (d) { return prop_list.indexOf(d); })
 			//.attr('onchange',function(d){display_prop(d);});
 			.attr('onchange','display_prop(this)');
 
 		property_label.append('label').text(function (d) { return d; });
-		
-
 	}
 
 	function display_color_choice(prop_list,item,text){
@@ -299,13 +300,11 @@
 		}
 	}
 
-
 	function set_nb_layers(){
 		var nb_layers = parseInt(document.getElementById('nbLayers').value);
 		//var nb_layers = parseInt(layer_input.getAttribute("value"));
 		console.log(nb_layers)
 		graph_viz.layers.set_nb_layers(nb_layers);
-
 	}
 
 	function show_hide_element(element_label){
