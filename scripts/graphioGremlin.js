@@ -100,7 +100,6 @@ var graphioGremlin = (function(){
 		let input_string = $('#search_value').val();
 		let input_field = $('#search_field').val();
 		let label_field = $('#label_field').val();
-		let search_type = $('#search_type').val();
 		
 		var filtered_string = input_string;//You may add .replace(/\W+/g, ''); to refuse any character not in the alphabet
 		if (filtered_string.length>50) filtered_string = filtered_string.substring(0,50); // limit string length
@@ -113,17 +112,10 @@ var graphioGremlin = (function(){
 		
 		if (input_field !== "" && input_string !== "") {
 			has_str += ".has('" + input_field + "',";
-			switch (search_type) {
-				case "eq":
-					if (isInt(input_string)){
-						has_str += filtered_string + ")"
-					} else {
-						has_str += "'" + filtered_string + "')"
-					}
-					break;
-				case "contains":
-					has_str += "textContains('" + filtered_string + "'))";
-					break;
+			if (isInt(input_string)){
+				has_str += filtered_string + ")"
+			} else {
+				has_str += "'" + filtered_string + "')"
 			}
 		} 
 
