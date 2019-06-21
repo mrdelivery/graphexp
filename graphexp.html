@@ -140,12 +140,10 @@
 			// Create the info box for node details
 			infobox.create("#graphInfo","#nodeInfo"); // from module in infobox.js
 
-			//console.log(graph_viz.graph_events.ev);
-			//graph_viz.graph_events.test();
-			get_graph_info()
-
+			get_graph_info();
 
 	function init_property_bar(){
+		document.getElementById('keyspace_field').value = KEYSPACE;
 		document.getElementById('nbLayers').value = default_nb_of_layers;
 	}
 
@@ -308,6 +306,5 @@
 
 
 		</script>
-
 	</body>
 </html>
