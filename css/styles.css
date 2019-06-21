@@ -99,6 +99,16 @@ Layout styles
 	padding: 0;
 }
 
+.nav-bar table
+{
+	border-top: transparent
+}
+
+.nav-bar td
+{
+	border-bottom: transparent
+}
+
 .container
 {
 	padding: 1em 1.25em;
@@ -315,6 +325,8 @@ Single styles
 	padding-right: 5px;
 	padding-left: 5px;
 }
+
+
 
 /* -----------------------
 Wide styles

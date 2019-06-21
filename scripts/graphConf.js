@@ -14,6 +14,9 @@ const SINGLE_COMMANDS_AND_NO_VARS = false;
 const REST_TIMEOUT = 120000 
 // TODO: configuration for the secure server
 
+// Does not actually affect the keyspace we reading from.
+// This is set by the build process and is for display purposes only
+const KEYSPACE = "UNKNOWN"
 
 // Graph configuration
 const default_nb_of_layers = 5;

@@ -42,73 +42,64 @@
 
 	</head>
 	<body>
-		<!--
-		<div class="header">
-			<div class="container">
-				<h1 class="header-heading">Graph Explorer v 0.6</h1>
-			</div>
-		</div>
-		-->
 		<div class="nav-bar">
-			<div class="nav container" id="search_bar">
-				<div class="nav inputs_container_top">
-					<div class="nav input_unit_container">
+			<table style="width:100%">
+				<tr>
+					<td>
+						<label for="keyspace_field">Keyspace:</label>
+						<input name="keyspace_field" id="keyspace_field" value="" style="background-color:#CCCCCC" disabled/>
+					</td>
+					<td>
 						<label for="label_field">Node label:</label>
 						<input name="label_field" id="label_field" value="" />
-					</div>
-					<div class="nav input_unit_container">
+					</td>
+					<td>
 						<label for="search_field">Node property:</label>
 						<input name="search_field" id="search_field" value="" />
-					</div>
-					<div class="nav input_unit_container">
+					</td>
+					<td>
 						<label class="nav input_label" for="search_value">Property value:</label>
 						<input name="search_value" id="search_value" value="" />
-					</div>
-					<div class="nav input_unit_container">
-						<label for="search_type">Type of search:</label>
-						<select name="search_type" id="search_type">
-							<option value="eq">Equals</option>
-							<option value="contains">Contains</option>
-						</select>
-					</div>
-					<div class="nav input_unit_container">
+					</td>
+					<td>
 						<label for="limit_field">Results limit:</label>
 						<input name="limit_field" id="limit_field" value="10" min="1" max="1000" type="number"/>
-					</div>
-				</div>
-				<div class="nav controls">
-					<button name="search query" onclick="search_query();">Search</button>
-				</div>
-			</div>
-			<div class="nav container" id="graph_bar">
-				<div class="nav inputs_container_bottom">
-					<div class="nav input_unit_container">
+					</td>
+					<td>
+						<button name="search query" onclick="search_query();">Search</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
 						<input type="checkbox" name="line-haul" id="line-haul" checked/>
 						<label class="nav input_label" for="line-haul">Line Hauls</label>
-						
+							
 						<input type="checkbox" name="last-mile" id="last-mile" checked/>
 						<label class="nav input_label" for="last-mile">Last Miles</label>
-					</div>
-					<div class="nav input_unit_container">
+					</td>
+					<td>
 						<label class="nav input_label" for="nbLayers">Layers</label>
 						<input type="number" id="nbLayers" min="1" max="128" onclick="set_nb_layers()">
-					</div>
-					<div class="nav input_unit_container">
+					</td>
+					<td>
 						<input type="checkbox" name="showAllocations" id="show-allocations"/>
 						<label class="nav input_label" for="showAllocations">Show Allocation Data</label>
 
 						<input type="checkbox" name="showName_box" id="showName" onclick="graphShapes.show_names()"/>
 						<label class="nav input_label" for="showName">Show labels</label>
-					</div>
-					<div class="nav input_unit_container">
+					</td>
+					<td>
 						<input type="checkbox" name="Freeze" id="freeze-in" />
 						<label class="nav input_label" for="freeze-in">Freeze</label>
-					</div>
-				</div>
-				<div class="nav controls">
-					<button name="clear" onclick="graph_viz.clear();">Clear</button>
-				</div>
-			</div>
+					</td>
+					<td>
+						
+					</td>
+					<td>
+						<button name="clear" onclick="graph_viz.clear();">Clear</button>
+					</td>
+				</tr>
+			</table>
 		</div>
 		<div class="content">
 				<div class="main" id="main">
@@ -149,12 +140,10 @@
 			// Create the info box for node details
 			infobox.create("#graphInfo","#nodeInfo"); // from module in infobox.js
 
-			//console.log(graph_viz.graph_events.ev);
-			//graph_viz.graph_events.test();
-			get_graph_info()
-
+			get_graph_info();
 
 	function init_property_bar(){
+		document.getElementById('keyspace_field').value = KEYSPACE;
 		document.getElementById('nbLayers').value = default_nb_of_layers;
 	}
 
@@ -317,6 +306,5 @@
 
 
 		</script>
-
 	</body>
 </html>
