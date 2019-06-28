@@ -162,11 +162,11 @@ var graphioGremlin = (function(){
 		var isLineHaulChecked = $('#line-haul')[0].checked;
 
 		if(isLastMileChecked && isLineHaulChecked){
-			edgesToTraverse = "'LineHaul','LastMile'"
+			edgesToTraverse = "'LINE_HAUL','LAST_MILE'"
 		} else if(isLastMileChecked){
-			edgesToTraverse = "'LastMile'"
+			edgesToTraverse = "'LAST_MILE'"
 		} else if(isLineHaulChecked){
-			edgesToTraverse = "'LineHaul'"
+			edgesToTraverse = "'LINE_HAUL'"
 		} else {
 			edgesToTraverse = "'NoEdgesToTravese'" //Hack to make sure no edges returned when both check boxes are unticked
 		}
